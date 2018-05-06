@@ -1,0 +1,20 @@
+{
+    "name": "mindk/stud_app",
+    "type": "application",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ddavidov",
+            "email": "ddavidov@mindk.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:ddavidov/stud_framework.git"
+        }
+    ],
+    "require": {
+        "mindk/stud_framework": "dev-master"
+    }
+}
