@@ -4,14 +4,14 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "ddavidov",
-            "email": "ddavidov@mindk.com"
+            "name": "SergeiLomako_and_VladimirKuznetsov",
+            "email": "flameseeker2304@gmail.com"
         }
     ],
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:ddavidov/stud_framework.git"
+            "url": "git@github.com:SergeiLomako/stud-framework.git"
         }
     ],
     "require": {
