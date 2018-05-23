@@ -55,14 +55,14 @@ class ProductController
      */
     function create(Request $request, ProductModel $model){
 
-        $name = $request->get('name', '', 'string');
+        $name = $request->get('title', '', 'string');
         $price = $request->get('price', '', 'float');
 
         if(!empty($name) && strlen($name) > 3 && strlen($name) < 31) {
 
             if(!empty($price) && $price > 0) {
 
-                $model->create( array('name' => $name,
+                $model->create( array('title' => $name,
                     'price' => $price) );
 
             } else {
