@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\CategoryModel;
 use App\Models\ProductModel;
 use Mindk\Framework\Http\Request\Request;
 use Mindk\Framework\Exceptions\NotFoundException;
@@ -16,19 +17,22 @@ class ProductController
 {
     /**
      * Products index page
+     *
+     * @param ProductModel $model
+     * @param CategoryModel $categoryModel
+     * @param Request $request
+     * @return array
      */
-    function index(ProductModel $model){
-
-        return $model->getList();
+    function index(ProductModel $model, CategoryModel $categoryModel, Request $request){
+        return $request->has('state') ? $model->filtered($categoryModel, $request) : $model->getList();
     }
 
     /**
      * Single product page
      *
-     * @param   ProductModel
-     * @param   int Product ID
-     *
-     * @return  mixed
+     * @param ProductModel $model
+     * @param $id
+     * @return object
      * @throws NotFoundException
      */
     function show(ProductModel $model, $id){

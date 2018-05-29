@@ -7,7 +7,8 @@ return [
     ],
     'index' => [
         'handler' => 'App\Controllers\ProductController@index',
-        'path' => '/products'
+        'path' => '/products',
+        'method' => 'GET'
     ],
     'product_show' => [
         'handler' => 'App\Controllers\ProductController@show',
@@ -18,7 +19,7 @@ return [
         'handler' => 'App\Controllers\ProductController@create',
         'path' => '/product',
         'method' => 'POST',
-        'acl' => ['user', 'admin']
+        'acl' => ['admin', 'user']
     ],
     'login' => [
         'handler' => 'Mindk\Framework\Controllers\UserController@login',
