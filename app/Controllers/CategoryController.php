@@ -13,5 +13,7 @@ use App\Models\CategoryModel;
 
 class CategoryController
 {
-
+    public function index(CategoryModel $model){
+        return $model->getArrayList();
+    }
 }

@@ -4,3 +4,4 @@ composer.lock
 /vendor
 /error.log
 /config/config.php
+/public/uploads
