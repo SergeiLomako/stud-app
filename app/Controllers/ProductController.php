@@ -49,9 +49,34 @@ class ProductController
 
     /**
      * Create product
+     *
+     * @param Request $request
+     * @param ProductModel $model
+     *
+     * @return string
+     *
+     * @throws NotFoundException
      */
-    function create(){
+    function create(Request $request, ProductModel $model){
+
+        $name = $request->get('title', '', 'string');
+        $price = $request->get('price', '', 'float');
+
+        if(!empty($name) && strlen($name) > 3 && strlen($name) < 31) {
+
+            if(!empty($price) && $price > 0) {
+
+                $model->create( array('title' => $name,
+                    'price' => $price) );
+
+            } else {
+                throw new NotFoundException("Product price is absent or incorrect.");
+            }
+
+        } else {
+            throw new NotFoundException("Product name is absent or should be between 4 and 30 symbols.");
+        }
+
         return "SUCCESS";
-        //@TODO: Implement this
     }
 }
