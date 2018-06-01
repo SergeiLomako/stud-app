@@ -15,6 +15,7 @@
         }
     ],
     "require": {
-        "mindk/stud_framework": "dev-dev"
+        "mindk/stud_framework": "dev-master"
+
     }
 }

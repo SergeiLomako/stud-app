@@ -27,6 +27,12 @@ return [
         'method' => 'PUT',
         'acl' => ['admin', 'user']
     ],
+    'product_image_update' => [
+        'handler' => 'App\Controllers\ProductController@update',
+        'path' => '/product/{id}',
+        'method' => 'POST',
+        'acl' => ['admin', 'user']
+    ],
     'product_delete' => [
         'handler' => 'App\Controllers\ProductController@delete',
         'path' => '/product/{id}',
