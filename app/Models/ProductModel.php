@@ -43,14 +43,13 @@ class ProductModel extends Model
         }
 
         $limit = $page == 1 ? sprintf('LIMIT %s', $conf_limit)
-                 : sprintf('LIMIT %s, %s', $conf_limit * $page, $conf_limit);
+                 : sprintf('LIMIT %s, %s', $conf_limit * ($page - 1), $conf_limit);
 
         if(!empty($search)){
             $searched = "AND `title` LIKE '%$search%' OR `description` LIKE '%$search%'";
         }
         $sql = sprintf('SELECT * FROM %s %s %s %s %s %s', $this->tableName, $category, $active,
                         $searched, $sorting, $limit);
-
         return $this->dbo->setQuery($sql)->getList(get_class($this));
 
     }
