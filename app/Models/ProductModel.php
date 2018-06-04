@@ -14,6 +14,8 @@ use Mindk\Framework\Http\Request\Request;
 class ProductModel extends Model
 {
     protected $tableName = 'products';
+    protected $fillable = ['title' => 'string', 'description' => 'string',
+                           'price' => 'int', 'active' => 'int', 'category_id' => 'int'];
 
     public function filtered(CategoryModel $categoryModel, $request){
         if(!$request instanceof Request){
