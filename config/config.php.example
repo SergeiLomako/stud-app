@@ -9,5 +9,8 @@ return [
     ],
     'routes' => include("routes.php"),
     'services' => include("services.php"),
-    'middleware' => include("middleware.php")
+    'middleware' => include("middleware.php"),
+    'max_file_size' => 2048,
+    'uploads' => '/path/to/uploads/',
+    'front_url' => 'http://your-front.url'
 ];
