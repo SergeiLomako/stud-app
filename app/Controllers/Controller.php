@@ -8,14 +8,13 @@ namespace App\Controllers;
  * Class Controller
  * @package App\Controllers
  */
-use App\Models\ProductModel;
 
 class Controller
 {
     /**
      * Home page
      */
-    public function home(ProductModel $model){
+    public function home(){
         // Since it's just API, just return some data, e.g. version, stability status, etc:
         return [
             'status'    => 'Ok',
