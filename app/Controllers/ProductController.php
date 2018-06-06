@@ -12,6 +12,8 @@ use Mindk\Framework\Exceptions\NotFoundException;
 use Mindk\Framework\Exceptions\FileException;
 use Mindk\Framework\Auth\AuthService;
 use Mindk\Framework\Http\Response\JsonResponse;
+use Mindk\Framework\Validation\Validation;
+use Mindk\Framework\DB\DBOConnectorInterface;
 
 
 /**
@@ -55,21 +57,38 @@ class ProductController
      * @param Config $config
      * @param Request $request
      * @param File $file
+     * @param Validation $validation
+     * @param DBOConnectorInterface $db
      * @return JsonResponse
      * @throws FileException
      * @throws \Mindk\Framework\Exceptions\ModelException
+     * @throws \Mindk\Framework\Exceptions\ValidationException
      */
-    function create(ProductModel $model, Config $config, Request $request, File $file)
+    function create(ProductModel $model, Config $config, Request $request, File $file, Validation $validation, DBOConnectorInterface $db)
     {
-        $errors = [];
+        $rules = [
+            'title' => 'required|string|min:5',
+            'description' => 'required|string|min:10',
+            'price' => 'required|int',
+            'category_id' => 'required|int',
+            'image' => 'required|file',
+            'active' => 'required|int'
+        ];
+
+        $errors = $validation->validate($request, $rules, $db);
+
+        if(is_array($errors)) {
+            return new JsonResponse($errors, 400);
+        }
+
         $data = [];
-        $image = $request->hasUploadFile('image') ? $request->get('image') : null;
-        $data['title'] = $request->check('title') ? $request->get('title', null, 'string') : array_push($errors, ['title' => 'Field is required']);
-        $data['description'] = $request->check('description') ? $request->get('description', null, 'string') : array_push($errors, ['description' => 'Field is required']);
-        $data['price'] = $request->check('price') ? $request->get('price', null, 'int') : array_push($errors, ['price' => 'Field is required']);
-        $data['category_id'] = $request->check('category_id') ? $request->get('category_id', null, 'int') : array_push($errors, ['category_id' => 'Field is required']);
+        $image = $request->get('image');
+        $data['title'] = $request->get('title', null, 'string');
+        $data['description'] = $request->get('description', null, 'string');
+        $data['price'] = $request->get('price', null, 'int');
+        $data['category_id'] = $request->get('category_id', null, 'int');
         $data['user_id'] = AuthService::getUserId();
-        $data['active'] = $request->check('active') ? $request->get('active', null, 'int') : 1;
+        $data['active'] = $request->get('active', null, 'int');
 
         $result = ['SUCCESS'];
         $code = 201;
@@ -117,28 +136,41 @@ class ProductController
      * Update product
      *
      * @param ProductModel $model
-     * @param Config $config
      * @param File $file
      * @param Request $request
+     * @param Validation $validation
+     * @param DBOConnectorInterface $db
      * @param $id
      * @return JsonResponse
      * @throws FileException
      * @throws NotFoundException
+     * @throws \Mindk\Framework\Exceptions\ValidationException
      */
-    public function update(ProductModel $model, Config $config, File $file, Request $request, $id)
+    public function update(ProductModel $model, File $file, Request $request, Validation $validation, DBOConnectorInterface $db, $id)
     {
         $product = $model->findOrFail($id);
+        $config = Config::getInstance();
         $user = AuthService::getUser();
         if ($product->user_id == $user->id || $user->getRole() == 'admin') {
+            $rules = [
+                'title' => 'string|min:5',
+                'description' => 'string|min:10',
+                'price' => 'int',
+                'category_id' => 'int',
+                'active' => 'int',
+                'image' => 'file'
+            ];
+
+            $errors = $validation->validate($request, $rules, $db);
+            if(is_array($errors)) {
+                return new JsonResponse($errors, 400);
+            }
+
             if ($request->getMethod() === 'PUT') {
-                $product->title = $request->check('title') ? $request->get('title', null, 'string') : $product->title;
-                $product->description = $request->check('description') ? $request->get('description', null, 'string') : $product->description;
-                $product->price = $request->check('price') ? $request->get('price', null, 'int') : $product->price;
-                $product->category_id = $request->check('category_id') ? $request->get('category_id', null, 'int') : $product->category_id;
-                $product->active = $request->check('active') ? $request->get('active', null, 'int') : $product->active;
+                $product->fill($request);
             }
             else {
-                $image = $request->hasUploadFile('image') ? $request->get('image') : null;
+                $image = $request->get('image');
                 $product->image = $this->saveImage($model, $file, $image, null, $id);
                 $file->move($image['tmp_name'], Helper::getPath($config->uploads) . $product->image);
             }
@@ -192,8 +224,8 @@ class ProductController
 
             $errors = [];
             $file->isImage($image) ?: array_push($errors, 'file is not image');
-            $file->isValidSize($image, $config->max_file_size) ?: array_push($errors, 'file is not valid size (max: ' . $config->max_file_size . 'KB');
-            $image['errors'] === 0 ?: array_push($errors, $file_error_mapping[$image['error']]);
+            $file->isValidSize($image, $config->max_file_size) ?: array_push($errors, 'file is not valid size (max: ' . $config->max_file_size . 'KB)');
+            $image['error'] === 0 ? null : array_push($errors, $file_error_mapping[$image['error']]);
 
             throw new FileException('Errors: ' . implode(',', $errors));
         }

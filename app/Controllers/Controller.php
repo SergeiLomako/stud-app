@@ -9,7 +9,6 @@ namespace App\Controllers;
  * @package App\Controllers
  */
 
-
 class Controller
 {
     /**
