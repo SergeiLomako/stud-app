@@ -47,7 +47,13 @@ class ProductController
      */
     function show(ProductModel $model, $id)
     {
-        return $model->findOrFail($id);
+        $product =  $model->findOrFail($id);
+        $user = AuthService::getUser();
+        $access = false;
+        if($user->id === $product->user_id || $user->getRole() == 'admin'){
+            $access = true;
+        }
+        return ['product' => $product, 'access' => $access];
     }
 
     /**
