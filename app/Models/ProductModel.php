@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Mindk\Framework\Models\Model;
-use MindK\Framework\Config\Config;
+use Mindk\Framework\Config\Config;
 use Mindk\Framework\Http\Request\Request;
 
 /**
@@ -54,5 +54,12 @@ class ProductModel extends Model
                         $searched, $sorting, $limit);
         return $this->dbo->setQuery($sql)->getList(get_class($this));
 
+    }
+
+    public function getLimitList( string $columnName = '*') {
+        $config  = Config::getInstance();
+        $sql = sprintf("SELECT `%s` FROM `%s` LIMIT %u",
+            $columnName, $this->tableName, $config->limit);
+        return $this->dbo->setQuery($sql)->getList(get_class($this));
     }
 }

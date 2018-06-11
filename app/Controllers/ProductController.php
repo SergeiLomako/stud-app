@@ -34,7 +34,7 @@ class ProductController
      */
     function index(ProductModel $model, CategoryModel $categoryModel, Request $request)
     {
-        return $request->has('state') ? $model->filtered($categoryModel, $request) : $model->getList();
+        return $request->has('state') ? $model->filtered($categoryModel, $request) : $model->getLimitList();
     }
 
     /**
