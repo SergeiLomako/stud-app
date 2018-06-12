@@ -32,7 +32,7 @@ class ProductController
      * @param Request $request
      * @return array
      */
-    function index(ProductModel $model, CategoryModel $categoryModel, Request $request)
+    public function index(ProductModel $model, CategoryModel $categoryModel, Request $request)
     {
         return $request->has('state') ? $model->filtered($categoryModel, $request) : $model->getLimitList();
     }
@@ -45,7 +45,7 @@ class ProductController
      * @return object
      * @throws NotFoundException
      */
-    function show(ProductModel $model, $id)
+    public function show(ProductModel $model, $id)
     {
         $product = $model->findOrFail($id);
         $user = AuthService::getUser();
@@ -69,10 +69,11 @@ class ProductController
      * @param DBOConnectorInterface $db
      * @return JsonResponse
      * @throws FileException
+     * @throws NotFoundException
      * @throws \Mindk\Framework\Exceptions\ModelException
      * @throws \Mindk\Framework\Exceptions\ValidationException
      */
-    function create(ProductModel $model, Config $config, Request $request, File $file, Validation $validation, DBOConnectorInterface $db)
+    public function create(ProductModel $model, Config $config, Request $request, File $file, Validation $validation, DBOConnectorInterface $db)
     {
         $rules = [
             'title' => 'required|string|min:5',

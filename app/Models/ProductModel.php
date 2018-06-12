@@ -50,16 +50,36 @@ class ProductModel extends Model
         if(!empty($search)){
             $searched = "AND `title` LIKE '%$search%' OR `description` LIKE '%$search%'";
         }
-        $sql = sprintf('SELECT * FROM %s %s %s %s %s %s', $this->tableName, $category, $active,
-                        $searched, $sorting, $limit);
-        return $this->dbo->setQuery($sql)->getList(get_class($this));
+
+        $sql = sprintf("SELECT COUNT(*) FROM %s %s %s %s %s", $this->tableName, $category, $active,
+            $searched, $sorting);
+
+        $this->dbo->setQuery($sql)->getResult($this);
+        $pages = intval(ceil($this->{'COUNT(*)'} / $config->limit));
+
+        $sql = sprintf("SELECT * FROM %s %s %s %s %s %s", $this->tableName, $category, $active,
+            $searched, $sorting, $limit);
+
+        $products = $this->dbo->setQuery($sql)->getList(get_class($this));
+
+        return array('products' => $products, 'pages' => $pages);
 
     }
 
-    public function getLimitList( string $columnName = '*') {
+    public function getLimitList( string $columnName = '*' ) {
         $config  = Config::getInstance();
+
+        $sql = sprintf("SELECT COUNT(*) FROM `%s`",
+            $this->tableName);
+
+        $this->dbo->setQuery($sql)->getResult($this);
+        $pages = intval(ceil($this->{'COUNT(*)'} / $config->limit));
+
         $sql = sprintf("SELECT `%s` FROM `%s` LIMIT %u",
             $columnName, $this->tableName, $config->limit);
-        return $this->dbo->setQuery($sql)->getList(get_class($this));
+
+        $products = $this->dbo->setQuery($sql)->getList(get_class($this));
+
+        return array('products' => $products, 'pages' => $pages);
     }
 }
