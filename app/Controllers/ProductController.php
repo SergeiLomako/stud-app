@@ -73,7 +73,7 @@ class ProductController
      * @throws \Mindk\Framework\Exceptions\ModelException
      * @throws \Mindk\Framework\Exceptions\ValidationException
      */
-    public function create(ProductModel $model, Config $config, Request $request, File $file, Validation $validation, DBOConnectorInterface $db)
+    public function create(ProductModel $model, Request $request, File $file, Validation $validation)
     {
         $rules = [
             'title' => 'required|string|min:5',
@@ -84,7 +84,8 @@ class ProductController
             'active' => 'required|int'
         ];
 
-        $errors = $validation->validate($request, $rules, $db);
+        $config = Config::getInstance();
+        $errors = $validation->validate($request, $rules);
 
         if(is_array($errors)) {
             return new JsonResponse($errors, 400);
