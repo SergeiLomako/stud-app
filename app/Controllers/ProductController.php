@@ -60,16 +60,13 @@ class ProductController
 
     /**
      * Create new product
-     *
+     * 
      * @param ProductModel $model
-     * @param Config $config
      * @param Request $request
      * @param File $file
      * @param Validation $validation
-     * @param DBOConnectorInterface $db
      * @return JsonResponse
      * @throws FileException
-     * @throws NotFoundException
      * @throws \Mindk\Framework\Exceptions\ModelException
      * @throws \Mindk\Framework\Exceptions\ValidationException
      */
