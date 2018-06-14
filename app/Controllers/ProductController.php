@@ -14,7 +14,6 @@ use Mindk\Framework\Auth\AuthService;
 use Mindk\Framework\Http\Response\JsonResponse;
 use Mindk\Framework\Validation\Validation;
 use Mindk\Framework\DB\DBOConnectorInterface;
-use Mindk\Framework\Models\UserModel;
 
 
 /**
@@ -33,30 +32,26 @@ class ProductController
      * @param Request $request
      * @return array
      */
-    public function index(ProductModel $model, CategoryModel $categoryModel, Request $request) {
-
+    public function index(ProductModel $model, CategoryModel $categoryModel, Request $request)
+    {
         return $request->has('state') ? $model->filtered($categoryModel, $request) : $model->getLimitList();
     }
 
     /**
-     * Single product page access check
+     * Single product page
      *
      * @param ProductModel $model
-     * @param Request $request
-     * @param UserModel $user_model
      * @param $id
-     * @return array
+     * @return object
      * @throws NotFoundException
      */
-    public function show(ProductModel $model, Request $request, UserModel $user_model, $id) {
-
-        $token = $request->get('token', '', 'string');
-        $user = $user_model->findByToken($token);
+    public function show(ProductModel $model, $id)
+    {
         $product = $model->findOrFail($id);
+        $user = AuthService::getUser();
         $access = false;
-
-        if(!empty($user)) {
-            if($user->id === $product->user_id || $user->getRole() === 'admin') {
+        if(!empty($user)){
+            if($user->id=== $product->user_id || $user->getRole() == 'admin'){
                 $access = true;
             }
         }
@@ -65,14 +60,13 @@ class ProductController
 
     /**
      * Create new product
-     *
+     * 
      * @param ProductModel $model
      * @param Request $request
      * @param File $file
      * @param Validation $validation
      * @return JsonResponse
      * @throws FileException
-     * @throws NotFoundException
      * @throws \Mindk\Framework\Exceptions\ModelException
      * @throws \Mindk\Framework\Exceptions\ValidationException
      */

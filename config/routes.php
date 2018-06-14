@@ -13,7 +13,7 @@ return [
     'product_show' => [
         'handler' => 'App\Controllers\ProductController@show',
         'path' => '/product/{id}',
-        'method' => 'POST'
+        'method' => 'GET'
     ],
     'product_create' => [
         'handler' => 'App\Controllers\ProductController@create',
