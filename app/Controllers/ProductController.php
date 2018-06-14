@@ -13,7 +13,6 @@ use Mindk\Framework\Exceptions\FileException;
 use Mindk\Framework\Auth\AuthService;
 use Mindk\Framework\Http\Response\JsonResponse;
 use Mindk\Framework\Validation\Validation;
-use Mindk\Framework\DB\DBOConnectorInterface;
 
 
 /**
@@ -141,7 +140,7 @@ class ProductController
 
     /**
      * Update product
-     *
+     * 
      * @param ProductModel $model
      * @param File $file
      * @param Request $request
@@ -153,7 +152,7 @@ class ProductController
      * @throws NotFoundException
      * @throws \Mindk\Framework\Exceptions\ValidationException
      */
-    public function update(ProductModel $model, File $file, Request $request, Validation $validation, DBOConnectorInterface $db, $id)
+    public function update(ProductModel $model, File $file, Request $request, Validation $validation, $id)
     {
         $product = $model->findOrFail($id);
         $config = Config::getInstance();
@@ -168,7 +167,7 @@ class ProductController
                 'image' => 'file'
             ];
 
-            $errors = $validation->validate($request, $rules, $db);
+            $errors = $validation->validate($request, $rules);
             if(is_array($errors)) {
                 return new JsonResponse($errors, 400);
             }
