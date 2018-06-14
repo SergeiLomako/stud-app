@@ -145,7 +145,6 @@ class ProductController
      * @param File $file
      * @param Request $request
      * @param Validation $validation
-     * @param DBOConnectorInterface $db
      * @param $id
      * @return JsonResponse
      * @throws FileException
