@@ -17,6 +17,13 @@ class ProductModel extends Model
     protected $fillable = ['title' => 'string', 'description' => 'string',
                            'price' => 'int', 'active' => 'int', 'category_id' => 'int'];
 
+    /**
+     * Gets filtered product list
+     *
+     * @param CategoryModel $categoryModel
+     * @param $request
+     * @return array|bool
+     */
     public function filtered(CategoryModel $categoryModel, $request){
         if(!$request instanceof Request){
             return false;
@@ -66,6 +73,12 @@ class ProductModel extends Model
 
     }
 
+    /**
+     * Gets all products list
+     *
+     * @param string $columnName
+     * @return array
+     */
     public function getLimitList( string $columnName = '*' ) {
         $config  = Config::getInstance();
 
