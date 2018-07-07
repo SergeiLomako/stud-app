@@ -31,8 +31,8 @@ class ProductController
      * @param Request $request
      * @return array
      */
-    public function index(ProductModel $model, CategoryModel $categoryModel, Request $request)
-    {
+    public function index(ProductModel $model, CategoryModel $categoryModel, Request $request) {
+
         return $request->has('state') ? $model->filtered($categoryModel, $request) : $model->getLimitList();
     }
 
@@ -41,31 +41,33 @@ class ProductController
      *
      * @param ProductModel $model
      * @param $id
-     * @return object
+     * @return array
      * @throws NotFoundException
      */
-    public function show(ProductModel $model, $id)
-    {
+    public function show(ProductModel $model, $id) {
+
         $product = $model->findOrFail($id);
         $user = AuthService::getUser();
         $access = false;
         if(!empty($user)){
-            if($user->id=== $product->user_id || $user->getRole() == 'admin'){
+            if($user->id === $product->user_id || $user->getRole() == 'admin'){
                 $access = true;
             }
         }
+
         return ['product' => $product, 'access' => $access];
     }
 
     /**
      * Create new product
-     * 
+     *
      * @param ProductModel $model
      * @param Request $request
      * @param File $file
      * @param Validation $validation
      * @return JsonResponse
      * @throws FileException
+     * @throws NotFoundException
      * @throws \Mindk\Framework\Exceptions\ModelException
      * @throws \Mindk\Framework\Exceptions\ValidationException
      */
